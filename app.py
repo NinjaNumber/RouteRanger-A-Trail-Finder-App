@@ -5,6 +5,7 @@ import sqlite3
 conn = sqlite3.connect('project')
 c = conn.cursor()
 
+
 st.set_page_config(
 		page_title= "RouteRanger", 
 		 layout="wide",  
@@ -24,6 +25,13 @@ st.sidebar.image("https://i.imgur.com/7VEtlCP.jpg", use_column_width=True)
 
 st.title(":green[RouteRanger - A Trail Finder App]")
 
+###
+
+
+###
+
+## Web application starts here
+
 menu = ["Home", "Search", "Add Trails", "Trails Maintenance"]
 choice = st.sidebar.selectbox("MENU", menu)
 
@@ -40,17 +48,17 @@ if choice == "Home":
                 individuals who share your love for the great outdoors.""")
     
     st.subheader("All Trails Overview 🏕️")
-    all = 'SELECT trailName, parkName, elevation_feet, length, difficulty, routeType, reviews FROM Trails t JOIN NationalParks p ON t.parkID=p.parkID LIMIT 10'
-    display = pd.read_sql_query(all, con=conn)
-    st.dataframe(display, column_config={'trailName':'Trail', 'parkName':'National Park',
-                                         'length': st.column_config.NumberColumn('Length',format="%.2f mi"),
-                                         'elevation_feet':st.column_config.NumberColumn('Elevation',
-                                                                                        format="%d ft"),
-                                         'difficulty': st.column_config.NumberColumn('Difficulty',
-                                                                                     help="1 - Easy, 2 - Moderate, 3 - Hard, 4 - Strenuous, 5 - Very challenging",
-                                                                                       format="%d 🥾"),
-                                         'reviews':st.column_config.NumberColumn('Reviews', format="%d 💬")},
-                 hide_index=True)
+    mapdf = pd.read_csv('trails-geoloc.csv')
+    # st.map(mapdf)
+    
+    import plotly.express as px
+
+    fig = px.scatter_mapbox(mapdf, lat="lat", lon="lon", size='difficulty', hover_name='name', opacity=0.5, zoom=3)
+
+    fig.update_layout(mapbox_style="open-street-map")
+    fig.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
+    st.plotly_chart(fig)
+
     
 elif choice=="Search":   
     st.subheader("Find trail🔎")
