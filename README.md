@@ -1,5 +1,5 @@
 # RouteRanger-A-Trail-Finder-App
-_a school project of building an interactive database application web-app_
+_a school project of building an interactive database application_
 
 Link: https://routeranger.streamlit.app/
 
